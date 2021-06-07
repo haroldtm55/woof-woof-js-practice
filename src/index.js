@@ -27,13 +27,11 @@ function renderDogs(dogs) {
 
     
   }
-    
-  
   //Assign the name of the dogs to the spans
   const dogSpans = document.querySelectorAll('div#dog-bar span')
   for (let i=0; i<=dogSpans.length -1; i++) {
     dogSpans[i].textContent = dogs[i].name
-    dogSpans[i].className = dogs[i].isGoodDog
+    dogSpans[i].className = dogs[i].isGoodDog ? 'Good Dog!' : 'Bad Dog!' //be more specific
   }
   //Add a click event listener to each span
   const dogImgs = document.getElementsByTagName('img')
@@ -61,7 +59,7 @@ function renderDogs(dogs) {
       dogFilter.textContent = 'Filter good dogs: ON'
       //Filter dog spans whose class is false and disable them
       dogSpans.forEach(span=> {
-        if (span.className === 'false'){
+        if (span.className === 'Bad Dog!'){
           span.style.display = 'none'
         }
       })
@@ -73,35 +71,35 @@ function renderDogs(dogs) {
       })
     }
   })
-
 }
 
 function updateDogStatus(dogs) {
   const dogButtons = document.querySelectorAll('#dog-info button')
   const dogTitles = document.querySelectorAll('div#dog-bar span')
+  console.log(dogs)
   for (let i=0; i<=dogs.length -1; i++) {
     dogButtons[i].addEventListener('click', ()=> {
       if (dogButtons[i].textContent === 'Good Dog!') {
         dogButtons[i].textContent = 'Bad Dog!'
          
-        fetch(`http://localhost:3000/pups/${i+1}`, {
+        fetch(`http://localhost:3000/pups/${dogs[i].id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({isGoodDog: false})
         })
-        dogTitles[i].className = 'false'
+        dogTitles[i].className = 'Bad Dog!'
       } else {
         dogButtons[i].textContent = 'Good Dog!'
-        fetch(`http://localhost:3000/pups/${i+1}`, {
+        fetch(`http://localhost:3000/pups/${dogs[i].id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({isGoodDog: true})
         })
-        dogTitles[i].className = 'true'
+        dogTitles[i].className = 'Good Dog!'
       }
     })
   }
